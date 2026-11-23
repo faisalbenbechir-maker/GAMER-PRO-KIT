@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Gamer Pro Kit - a personal gaming settings and progress organizer.">
+<title>Gamer Pro Kit</title>
+<style>
+:root{--bg:#080b14;--panel:#111827;--panel2:#151f31;--line:#263349;--text:#eef4ff;--muted:#9aabc4;--cyan:#42d9ff;--purple:#a78bfa;--green:#62e6ad;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#17213b 0,transparent 35%),var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.sidebar{padding:26px 18px;background:rgba(9,14,25,.92);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:26px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.7px}.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--purple));display:grid;place-items:center;color:#07111c;font-size:20px}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:3px}
+.nav{display:grid;gap:8px}.nav button{border:1px solid transparent;background:transparent;color:var(--muted);text-align:left;padding:13px 14px;border-radius:12px}.nav button.active,.nav button:hover{background:#17243a;border-color:#2c4664;color:var(--text)}
+.sidebar-note{margin-top:auto;color:var(--muted);font-size:12px;line-height:1.6;padding:14px;border:1px solid var(--line);border-radius:12px}
+main{padding:34px;max-width:1400px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:30px}.eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}h1{font-size:clamp(26px,4vw,38px);margin:7px 0}p{color:var(--muted);line-height:1.6}.status{border:1px solid #245b56;color:var(--green);background:#0d2927;padding:9px 13px;border-radius:999px;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:22px 0}.card,.section{background:linear-gradient(145deg,rgba(21,31,49,.96),rgba(13,20,34,.96));border:1px solid var(--line);border-radius:17px;padding:20px;box-shadow:0 12px 35px #0002}.card .icon{font-size:24px}.card h3{margin:15px 0 6px;font-size:16px}.card p{font-size:13px;margin:0 0 14px}.card button,.primary{background:linear-gradient(100deg,var(--cyan),#8ca9ff);color:#07111c;border:0;border-radius:10px;padding:10px 14px;font-weight:800}.section{margin-top:18px}.section h2{margin:0 0 6px;font-size:19px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:grid;gap:7px}.field label{font-size:12px;color:var(--muted)}input,select{width:100%;background:#0a1220;color:var(--text);border:1px solid #31425d;border-radius:9px;padding:11px 12px;outline:none}input:focus,select:focus{border-color:var(--cyan)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.secondary{background:#1b2940;color:var(--text);border:1px solid #344967;border-radius:10px;padding:10px 14px}.danger{background:#351b2a;color:#ffb1bd;border:1px solid #663448;border-radius:10px;padding:9px 12px}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
+.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed #34445e;border-radius:12px}
+.hud-stage{position:relative;max-width:340px;height:570px;margin:15px auto;background:linear-gradient(145deg,#253c52,#101827 65%);border:8px solid #05080e;border-radius:34px;overflow:hidden}
+.hud-stage:before{content:"GAME SCREEN PREVIEW";position:absolute;top:20px;left:0;right:0;text-align:center;color:#a9bdd1;font-size:10px;letter-spacing:2px}
+.hud-button{position:absolute;width:64px;height:64px;border-radius:50%;border:2px solid #6ee7ff;background:#42d9ff55;color:white;display:grid;place-items:center;font-weight:800;touch-action:none;user-select:none}
+.progress-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+.page{display:none}.page.active{display:block}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app{grid-template-columns:1fr}.sidebar{padding:14px;border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.nav button{text-align:center;padding:10px 4px;font-size:11px}.sidebar-note{display:none}main{padding:22px 15px}}
+@media(max-width:520px){.grid,.form-grid{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.nav button{font-size:10px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">G</div><div>GAMER PRO<small>PERSONAL GAMING KIT</small></div></div>
+  <nav class="nav">
+    <button class="active" data-page="dashboard">⌂ Dashboard</button>
+    <button data-page="settings">⚙ Settings</button>
+    <button data-page="performance">▥ Performance</button>
+    <button data-page="hud">▣ Mobile HUD</button>
+    <button data-page="progress">◷ Progress</button>
+    <button data-page="stats">▤ Stats</button>
+    <button data-page="backup">⇅ Backup</button>
+  </nav>
+  <div class="sidebar-note">Your gaming setup, organized in one place.<br><br><span style="color:var(--cyan)">Version 2.1</span> · Data saved in this browser.</div>
+</aside>
+<main>
+  <div class="top"><div><div class="eyebrow">PLAYER WORKSPACE</div><h1 id="pageTitle">Your Gaming Dashboard</h1><p id="pageDesc">Keep your settings, performance notes and goals organized.</p></div><div class="status">● LOCAL SAVE ENABLED</div></div>
+
+  <section class="page active" id="dashboard">
+    <div class="grid">
+      <article class="card"><div class="icon">🎯</div><h3>Settings Tracker</h3><p>Save sensitivity, DPI and controls for each game.</p><button onclick="showPage('settings')">Open tool →</button></article>
+      <article class="card"><div class="icon">📊</div><h3>Performance Log</h3><p>Record FPS and graphics settings manually.</p><button onclick="showPage('performance')">Open tool →</button></article>
+      <article class="card"><div class="icon">📱</div><h3>Mobile HUD Planner</h3><p>Arrange a sample control layout for mobile games.</p><button onclick="showPage('hud')">Open tool →</button></article>
+      <article class="card"><div class="icon">🏆</div><h3>Progress Tracker</h3><p>Track playtime and personal goals.</p><button onclick="showPage('progress')">Open tool →</button></article>
+    </div>
+    <div class="section"><h2>Quick start</h2><p>Choose a tool from the cards or navigation. Add a game profile first, then record your performance and progress. Your entries stay on this device in this browser.</p></div>
+  </section>
+
+  <section class="page" id="settings">
+    <div class="section"><div class="section-head"><div><h2>Game Preset Library</h2><p>Start a profile quickly. Presets provide game/platform templates only; players enter their own sensitivity and hardware-specific values.</p></div><span class="status">12 STARTER TEMPLATES</span></div>
+      <div class="form-grid"><div class="field"><label>Choose a game</label><select id="presetGame" onchange="previewPreset()"><option value="">Select a game</option><optgroup label="PC games"><option>Valorant</option><option>Counter-Strike 2</option><option>Fortnite</option><option>Minecraft</option><option>League of Legends</option><option>Call of Duty: Warzone</option><option>Apex Legends</option><option>Rocket League</option></optgroup><optgroup label="Mobile games"><option>PUBG Mobile</option><option>Call of Duty: Mobile</option><option>Free Fire</option><option>Mobile Legends</option></optgroup></select></div><div class="field"><label>Template type</label><input id="presetType" value="Choose a game to preview its template" readonly></div></div>
+      <div id="presetPreview" class="empty" style="margin-top:13px">Select a game to see which profile fields are relevant. No competitive settings are assumed.</div>
+      <div class="actions"><button class="secondary" onclick="applyPreset()">Use this template →</button></div>
+    </div>
+    <div class="section">
+      <div class="section-head"><div><h2>Game Settings</h2><p>Save your own settings for PC and mobile games.</p></div></div>
+      <div class="form-grid">
+        <div class="field"><label>Game name</label><input id="gameName" placeholder="e.g. Valorant, Fortnite, PUBG Mobile"></div>
+        <div class="field"><label>Platform</label><select id="platform"><option>PC</option><option>Mobile</option><option>Console</option></select></div>
+        <div class="field"><label>Sensitivity</label><input id="sensitivity" placeholder="e.g. 0.35 or 120"></div>
+        <div class="field"><label>DPI (optional)</label><input id="dpi" placeholder="e.g. 800"></div>
+        <div class="field"><label>Controls / notes</label><input id="controls" placeholder="e.g. custom keybinds, 4-finger layout"></div>
+        <div class="field"><label>Profile name</label><input id="profileName" placeholder="e.g. Main profile"></div>
+      </div>
+      <div class="actions"><button class="primary" onclick="addSettings()">Save settings</button><button class="secondary" onclick="clearSettingsForm()">Clear</button></div>
+    </div>
+    <div class="section"><h2>Saved profiles</h2><div id="settingsList" class="empty">No profiles saved yet.</div></div>
+  </section>
+
+  <section class="page" id="performance">
+    <div class="section"><h2>PC Performance Log</h2><p>Enter results from your own game benchmark or monitoring tool.</p>
+      <div class="form-grid">
+        <div class="field"><label>Game</label><input id="perfGame" placeholder="Game name"></div>
+        <div class="field"><label>Average FPS</label><input id="fps" type="number" min="0" placeholder="e.g. 144"></div>
+        <div class="field"><label>Resolution</label><input id="resolution" placeholder="e.g. 1920 × 1080"></div>
+        <div class="field"><label>Graphics preset</label><select id="graphics"><option>Low</option><option>Medium</option><option>High</option><option>Ultra</option><option>Custom</option></select></div>
+      </div>
+      <div class="actions"><button class="primary" onclick="addPerformance()">Add result</button></div>
+    </div>
+    <div class="section"><h2>Recorded results</h2><div id="performanceList" class="empty">No results recorded yet.</div></div>
+  </section>
+
+  <section class="page" id="hud">
+    <div class="section"><h2>Mobile HUD Planner</h2><p>Drag the sample buttons to sketch your preferred layout. This is a planning preview, not an in-game modification.</p>
+      <div class="hud-stage" id="hudStage">
+        <div class="hud-button" style="left:22px;bottom:100px">MOVE</div>
+        <div class="hud-button" style="right:24px;bottom:110px">FIRE</div>
+        <div class="hud-button" style="right:95px;bottom:205px;width:48px;height:48px">JUMP</div>
+        <div class="hud-button" style="left:40px;top:95px;width:45px;height:45px">MAP</div>
+      </div>
+      <div class="form-grid"><div class="field"><label>Layout name</label><input id="hudLayoutName" placeholder="e.g. Four-finger layout"></div></div>
+      <div class="actions"><button class="primary" onclick="saveHUD()">Save layout</button><button class="secondary" onclick="downloadHUD()">Export layout PNG</button><button class="secondary" onclick="resetHUD()">Reset layout</button></div>
+      <div id="hudSavedList" class="empty" style="margin-top:14px">No saved layouts yet.</div>
+    </div>
+  </section>
+
+  <section class="page" id="stats">
+    <div class="grid" id="statsCards"></div>
+    <div class="section"><h2>Gaming activity</h2><p>Summary based on the entries you record in this browser.</p><canvas id="statsChart" width="900" height="300" style="width:100%;max-height:300px"></canvas></div>
+  </section>
+
+  <section class="page" id="backup">
+    <div class="section"><h2>Backup & Restore</h2><p>Export your profiles, performance logs, progress records and saved HUD layouts to a JSON backup. Import it later on this or another device.</p>
+      <div class="actions"><button class="primary" onclick="exportBackup()">Export all data</button><label class="secondary" style="display:inline-flex;align-items:center;gap:8px">Import backup<input id="backupFile" type="file" accept="application/json" style="display:none" onchange="importBackup(event)"></label></div>
+      <p id="backupStatus" aria-live="polite"></p>
+    </div>
+    <div class="section"><h2>Important</h2><p>Your information is stored locally in your browser. A backup file is the way to move it to another device. Keep the file private because it contains your personal gaming records.</p></div>
+  </section>
+
+  <section class="page" id="progress">
+    <div class="section"><h2>Gaming Progress</h2><p>Track your playtime and personal goals.</p>
+      <div class="form-grid">
+        <div class="field"><label>Game</label><input id="progressGame" placeholder="Game name"></div>
+        <div class="field"><label>Hours played</label><input id="hours" type="number" min="0" step="0.5" placeholder="e.g. 2.5"></div>
+        <div class="field"><label>Personal goal</label><input id="goal" placeholder="e.g. Practice aim for 20 minutes"></div>
+      </div>
+      <div class="actions"><button class="primary" onclick="addProgress()">Save progress</button></div>
+    </div>
+    <div class="section"><h2>Progress history</h2><div id="progressList" class="empty">No progress saved yet.</div></div>
+  </section>
+</main>
+</div>
+<script>
+const titles={dashboard:["Your Gaming Dashboard","Keep your settings, performance notes and goals organized."],settings:["Gaming Settings Tracker","Save and revisit your personal game profiles."],performance:["PC Performance Log","Record and compare your own benchmark results."],hud:["Mobile HUD Planner","Sketch a comfortable control layout."],progress:["Gaming Progress Tracker","Keep a simple record of your playtime and goals."],stats:["Gaming Statistics","See a summary of the data you have recorded."],backup:["Backup & Restore","Move your data between browsers and devices."]};
+const read=(k)=>JSON.parse(localStorage.getItem("gpk_"+k)||"[]");
+const write=(k,v)=>localStorage.setItem("gpk_"+k,JSON.stringify(v));
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===id));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));document.getElementById("pageTitle").textContent=titles[id][0];document.getElementById("pageDesc").textContent=titles[id][1];}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function table(items,heads,render,kind){if(!items.length)return `<div class="empty">Nothing here yet. Add your first entry above.</div>`;return `<div class="table-wrap"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join("")}<th></th></tr></thead><tbody>${items.map((x,i)=>`<tr>${render(x)}<td><button class="danger" onclick="removeItem('${kind}',${i})">Delete</button></td></tr>`).join("")}</tbody></table></div>`;}
+function removeItem(k,i){let a=read(k);a.splice(i,1);write(k,a);renderAll();}
+const gamePresets={
+"Valorant":{platform:"PC",type:"Tactical FPS",fields:"Mouse sensitivity · DPI · Crosshair notes · Keybinds",note:"Record your own sensitivity, mouse DPI, crosshair code/description and keybind preferences."},
+"Counter-Strike 2":{platform:"PC",type:"Tactical FPS",fields:"Mouse sensitivity · DPI · Crosshair · Viewmodel · Keybinds",note:"Keep your personal mouse, crosshair, viewmodel and keybind notes together."},
+"Fortnite":{platform:"PC",type:"Battle Royale",fields:"Look sensitivity · Build/edit sensitivity · Keybinds · Display notes",note:"Record your own aim/build preferences, keybinds and display configuration."},
+"Minecraft":{platform:"PC",type:"Sandbox / Survival",fields:"Mouse sensitivity · FOV · Keybinds · Video notes",note:"Save your preferred controls, FOV and video settings for each game version or mode."},
+"League of Legends":{platform:"PC",type:"MOBA",fields:"Mouse settings · Hotkeys · Camera settings · Role/champion notes",note:"Organize hotkeys, camera preferences and personal champion/role notes."},
+"Call of Duty: Warzone":{platform:"PC",type:"Battle Royale FPS",fields:"Mouse/controller sensitivity · Keybinds · Graphics notes",note:"Record your own input preferences, keybinds and graphics configuration."},
+"Apex Legends":{platform:"PC",type:"Hero Battle Royale",fields:"Mouse/controller sensitivity · FOV · Keybinds · Legend notes",note:"Save input, FOV and legend-specific notes for your personal setup."},
+"Rocket League":{platform:"PC",type:"Sports / Vehicle",fields:"Controller sensitivity · Deadzone notes · Camera settings · Bindings",note:"Keep controller, deadzone, camera and button mapping preferences in one profile."},
+"PUBG Mobile":{platform:"Mobile",type:"Mobile Battle Royale",fields:"Camera sensitivity · ADS sensitivity · Gyroscope · HUD/finger layout",note:"Record your own camera, ADS, gyro and control-layout preferences for your device."},
+"Call of Duty: Mobile":{platform:"Mobile",type:"Mobile FPS",fields:"Camera sensitivity · Firing sensitivity · Gyroscope · HUD layout",note:"Organize your own camera, firing, gyro and button-layout settings."},
+"Free Fire":{platform:"Mobile",type:"Mobile Battle Royale",fields:"Aim sensitivity · HUD layout · Controls · Device notes",note:"Save your own aim, HUD and control preferences for your screen and play style."},
+"Mobile Legends":{platform:"Mobile",type:"MOBA",fields:"Control mode · Targeting preferences · HUD notes · Role notes",note:"Record targeting, control and role preferences for your own play style."}
+};
+function previewPreset(){const g=document.getElementById("presetGame").value;const p=gamePresets[g];document.getElementById("presetType").value=p?p.type:"Choose a game to preview its template";document.getElementById("presetPreview").innerHTML=p?`<b>${esc(g)} · ${esc(p.platform)}</b><p style="margin:8px 0 0">${esc(p.note)}</p><p style="margin:6px 0 0"><b>Profile fields:</b> ${esc(p.fields)}</p>`:"Select a game to see which profile fields are relevant. No competitive settings are assumed.";}
+function applyPreset(){const g=document.getElementById("presetGame").value;const p=gamePresets[g];if(!p){alert("Choose a game first.");return;}document.getElementById("gameName").value=g;document.getElementById("platform").value=p.platform;document.getElementById("profileName").value="My "+g+" profile";document.getElementById("controls").value=p.fields;document.getElementById("sensitivity").value="";document.getElementById("dpi").value="";document.getElementById("sensitivity").focus();document.getElementById("gameName").scrollIntoView({behavior:"smooth",block:"center"});}
+function addSettings(){let x={game:gameName.value.trim(),platform:platform.value,sensitivity:sensitivity.value.trim(),dpi:dpi.value.trim(),controls:controls.value.trim(),profile:profileName.value.trim()||"Main profile"};if(!x.game){alert("Please enter a game name.");return;}let a=read("settings");a.unshift(x);write("settings",a);clearSettingsForm();renderAll();}
+function clearSettingsForm(){["gameName","sensitivity","dpi","controls","profileName"].forEach(id=>document.getElementById(id).value="");}
+function addPerformance(){let x={game:perfGame.value.trim(),fps:fps.value,resolution:resolution.value.trim(),graphics:graphics.value};if(!x.game||!x.fps){alert("Please enter a game and average FPS.");return;}let a=read("performance");a.unshift(x);write("performance",a);["perfGame","fps","resolution"].forEach(id=>document.getElementById(id).value="");renderAll();}
+function addProgress(){let x={game:progressGame.value.trim(),hours:hours.value,goal:goal.value.trim()};if(!x.game||!x.hours){alert("Please enter a game and hours played.");return;}let a=read("progress");a.unshift(x);write("progress",a);["progressGame","hours","goal"].forEach(id=>document.getElementById(id).value="");renderAll();}
+function renderAll(){
+previewPreset();
+document.getElementById("settingsList").innerHTML=table(read("settings"),["Game","Platform","Sensitivity","DPI","Controls / notes","Profile"],x=>`<td>${esc(x.game)}</td><td>${esc(x.platform)}</td><td>${esc(x.sensitivity||"—")}</td><td>${esc(x.dpi||"—")}</td><td>${esc(x.controls||"—")}</td><td>${esc(x.profile)}</td>`,"settings");
+document.getElementById("performanceList").innerHTML=table(read("performance"),["Game","Average FPS","Resolution","Graphics"],x=>`<td>${esc(x.game)}</td><td>${esc(x.fps)}</td><td>${esc(x.resolution||"—")}</td><td>${esc(x.graphics)}</td>`,"performance");
+document.getElementById("progressList").innerHTML=table(read("progress"),["Game","Hours","Goal"],x=>`<td>${esc(x.game)}</td><td>${esc(x.hours)}</td><td>${esc(x.goal||"—")}</td>`,"progress");
+}
+function resetHUD(){document.getElementById("hudStage").querySelectorAll(".hud-button").forEach((b,i)=>{const p=[["22px","100px"],["24px","110px"],["95px","205px"],["40px","0px"]][i];b.style.left="";b.style.right="";b.style.top="";b.style.bottom="";if(i===0){b.style.left="22px";b.style.bottom="100px"}if(i===1){b.style.right="24px";b.style.bottom="110px"}if(i===2){b.style.right="95px";b.style.bottom="205px"}if(i===3){b.style.left="40px";b.style.top="95px"}})}
+let drag=null;document.querySelectorAll(".hud-button").forEach(el=>{el.addEventListener("pointerdown",e=>{drag=el;el.setPointerCapture(e.pointerId)});el.addEventListener("pointermove",e=>{if(!drag||drag!==el)return;let r=document.getElementById("hudStage").getBoundingClientRect();let x=Math.max(0,Math.min(r.width-el.offsetWidth,e.clientX-r.left-el.offsetWidth/2));let y=Math.max(0,Math.min(r.height-el.offsetHeight,e.clientY-r.top-el.offsetHeight/2));el.style.left=x+"px";el.style.top=y+"px";el.style.right="auto";el.style.bottom="auto"});el.addEventListener("pointerup",()=>drag=null)});
+function hudData(){return [...document.querySelectorAll("#hudStage .hud-button")].map(b=>({label:b.textContent,left:b.style.left,top:b.style.top,right:b.style.right,bottom:b.style.bottom}));}
+function saveHUD(){const name=document.getElementById("hudLayoutName").value.trim()||"My HUD layout";let a=read("hud");a.unshift({name,buttons:hudData(),date:new Date().toLocaleDateString()});write("hud",a);renderHUD();document.getElementById("hudLayoutName").value="";}
+function renderHUD(){const a=read("hud");const el=document.getElementById("hudSavedList");if(!el)return;el.innerHTML=a.length?a.map((x,i)=>`<div class="progress-row"><span><b>${esc(x.name)}</b><br><small>${esc(x.date||"")}</small></span><button class="secondary" onclick="loadHUD(${i})">Load</button></div>`).join(""):'<div class="empty">No saved layouts yet.</div>';}
+function loadHUD(i){const x=read("hud")[i];if(!x)return;const bs=[...document.querySelectorAll("#hudStage .hud-button")];x.buttons.forEach((v,j)=>{if(!bs[j])return;bs[j].style.left=v.left||"";bs[j].style.top=v.top||"";bs[j].style.right=v.right||"";bs[j].style.bottom=v.bottom||"";});}
+function downloadHUD(){const stage=document.getElementById("hudStage"),r=stage.getBoundingClientRect(),scale=2,c=document.createElement("canvas");c.width=r.width*scale;c.height=r.height*scale;const ctx=c.getContext("2d");ctx.scale(scale,scale);const grad=ctx.createLinearGradient(0,0,r.width,r.height);grad.addColorStop(0,"#253c52");grad.addColorStop(1,"#101827");ctx.fillStyle=grad;ctx.fillRect(0,0,r.width,r.height);ctx.fillStyle="#a9bdd1";ctx.font="10px Arial";ctx.textAlign="center";ctx.fillText("GAME SCREEN PREVIEW",r.width/2,34);document.querySelectorAll("#hudStage .hud-button").forEach(b=>{const br=b.getBoundingClientRect(),x=br.left-r.left,y=br.top-r.top;ctx.beginPath();ctx.arc(x+br.width/2,y+br.height/2,br.width/2-2,0,Math.PI*2);ctx.fillStyle="#267f9b";ctx.fill();ctx.lineWidth=2;ctx.strokeStyle="#6ee7ff";ctx.stroke();ctx.fillStyle="#fff";ctx.font="bold 11px Arial";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(b.textContent,x+br.width/2,y+br.height/2);});const a=document.createElement("a");a.download="my-mobile-hud-layout.png";a.href=c.toDataURL("image/png");a.click();}
+function exportBackup(){const data={product:"Gamer Pro Kit",version:2,exportedAt:new Date().toISOString(),settings:read("settings"),performance:read("performance"),progress:read("progress"),hud:read("hud")};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="gamer-pro-kit-backup.json";a.click();URL.revokeObjectURL(a.href);document.getElementById("backupStatus").textContent="Backup exported.";}
+function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const d=JSON.parse(reader.result);["settings","performance","progress","hud"].forEach(k=>{if(Array.isArray(d[k]))write(k,d[k]);});renderAll();renderHUD();renderStats();document.getElementById("backupStatus").textContent="Backup imported successfully.";}catch(err){document.getElementById("backupStatus").textContent="Could not read this backup file.";}};reader.readAsText(file);e.target.value="";}
+function renderStats(){const s=read("settings"),p=read("performance"),g=read("progress"),hours=g.reduce((n,x)=>n+(Number(x.hours)||0),0),avg=p.length?p.reduce((n,x)=>n+(Number(x.fps)||0),0)/p.length:0;document.getElementById("statsCards").innerHTML=[["Saved profiles",s.length,"🎯"],["Performance logs",p.length,"📊"],["Hours recorded",hours.toFixed(1),"◷"],["Average recorded FPS",p.length?avg.toFixed(0):"—","⚡"]].map(x=>`<article class="card"><div class="icon">${x[2]}</div><h3>${x[0]}</h3><div style="font-size:28px;font-weight:900;color:var(--cyan)">${x[1]}</div></article>`).join("");const c=document.getElementById("statsChart"),ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.strokeStyle="#31425d";ctx.lineWidth=1;for(let i=0;i<5;i++){let y=25+i*58;ctx.beginPath();ctx.moveTo(45,y);ctx.lineTo(875,y);ctx.stroke();}const vals=g.slice(0,8).reverse().map(x=>Number(x.hours)||0);if(!vals.length){ctx.fillStyle="#9aabc4";ctx.font="18px Arial";ctx.fillText("Add progress entries to see your activity chart.",55,155);return;}const max=Math.max(1,...vals);vals.forEach((v,i)=>{let bw=60,x=70+i*98,h=v/max*210;ctx.fillStyle="#42d9ff";ctx.fillRect(x,250-h,bw,h);ctx.fillStyle="#eef4ff";ctx.font="13px Arial";ctx.fillText(v+"h",x,238-h);});}
+const oldRenderAll=renderAll;
+renderAll=function(){oldRenderAll();renderHUD();renderStats();};
+renderAll();
+</script>
+</body>
+</html>
